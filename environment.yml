@@ -1,0 +1,22 @@
+name: hai
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - geopandas>=1.0
+  - shapely>=2.0
+  - pyogrio
+  - pyproj
+  - rasterio
+  - rasterstats
+  - sqlalchemy>=2.0
+  - geoalchemy2
+  - psycopg2
+  - pyyaml
+  - requests
+  - python-dotenv
+  - matplotlib
+  - pytest
+  - pip
+  - pip:
+      - -e .

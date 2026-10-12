@@ -1,0 +1,37 @@
+# Single source of truth for parameters. Every output's lineage points back here.
+crs:
+  analysis: "EPSG:3844"   # Pulkovo 1942(58) / Stereo70, Romania's national projected CRS (metres)
+  publish: "EPSG:4326"    # OGC API - Features default (CRS84 axis order)
+
+sources:
+  boundaries:
+    # geoBoundaries gbOpen; the API returns JSON with a gjDownloadURL
+    adm1_api: "https://www.geoboundaries.org/api/current/gbOpen/ROU/ADM1/"
+    adm2_api: "https://www.geoboundaries.org/api/current/gbOpen/ROU/ADM2/"
+    licence: "CC BY 4.0 (geoBoundaries); check the per-boundary licence in the API response"
+  osm:
+    overpass_urls:
+      - "https://overpass-api.de/api/interpreter"
+      - "https://overpass.kumi.systems/api/interpreter"
+      - "https://maps.mail.ru/osm/tools/overpass/api/interpreter"
+    licence: "ODbL 1.0, (c) OpenStreetMap contributors"
+  population:
+    # WorldPop 2020, 100 m, unconstrained, people per pixel. Verify the URL once by hand.
+    url: "https://data.worldpop.org/GIS/Population/Global_2000_2020/2020/ROU/rou_ppp_2020.tif"
+    licence: "CC BY 4.0 (WorldPop)"
+
+facilities:
+  dedupe_distance_m: 150   # node + polygon of the same facility collapse into one point
+
+analysis:
+  hospital_buffer_m: 10000
+  weights:                  # must sum to 1; a choice, not a truth (see README)
+    hospital: 0.35
+    primary: 0.25
+    pharmacy: 0.15
+    coverage: 0.25
+
+paths:
+  raw: "data/raw"
+  interim: "data/interim"
+  processed: "data/processed"

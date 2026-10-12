@@ -1,0 +1,111 @@
+# Local stack: pygeoapi reads PostGIS (docker compose up)
+server:
+  bind:
+    host: 0.0.0.0
+    port: 80
+  url: ${PYGEOAPI_SERVER_URL}
+  mimetype: application/json; charset=UTF-8
+  encoding: utf-8
+  languages: [en-US]
+  limit: 100   # pygeoapi 0.19 key; newer releases use limits.default_items
+  map:
+    url: https://tile.openstreetmap.org/{z}/{x}/{y}.png
+    attribution: "&copy; OpenStreetMap contributors"
+
+logging:
+  level: ERROR
+
+metadata:
+  identification:
+    title:
+      en: Healthcare Accessibility Index - Romania
+    description:
+      en: >-
+        Proximity-based accessibility to hospitals, primary care and pharmacies for
+        every Romanian administrative unit (UAT), built from OpenStreetMap,
+        geoBoundaries and WorldPop open data.
+    keywords:
+      en: [health, accessibility, Romania, OpenStreetMap, OGC API]
+    keywords_type: theme
+    terms_of_service: https://github.com/geo-andrei/romania-health-access-index#terms-of-use
+    url: https://github.com/geo-andrei/romania-health-access-index
+  license:
+    name: ODbL 1.0 (derived from OpenStreetMap)
+    url: https://opendatacommons.org/licenses/odbl/1-0/
+  provider:
+    name: Andrei
+    url: https://github.com/geo-andrei
+  contact:
+    name: Andrei Ancuta
+    position: GIS Specialist
+    city: Timisoara
+    country: Romania
+    email: andreiancuta08@gmail.com
+    url: https://www.linkedin.com/in/ancuta-andrei
+    role: pointOfContact
+
+resources:
+  access_index:
+    type: collection
+    title: Healthcare accessibility by UAT
+    description: Composite accessibility index (0-100, higher is better) and its indicators per UAT.
+    keywords: [health, accessibility, Romania]
+    links:
+      - type: text/html
+        rel: canonical
+        title: Methodology and lineage
+        href: https://github.com/geo-andrei/romania-health-access-index#method
+    extents:
+      spatial:
+        bbox: [20.26, 43.61, 29.76, 48.27]
+        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+    providers:
+      - type: feature
+        name: PostgreSQL
+        data:
+          host: db
+          port: 5432
+          dbname: ${POSTGRES_DB}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          search_path: [public]
+        id_field: lau_id
+        table: access_index_pub
+        crs: 
+          - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+          - http://www.opengis.net/def/crs/EPSG/0/4326
+          - http://www.opengis.net/def/crs/EPSG/0/3844
+        storage_crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        geom_field: geom
+  county_summary:
+    type: collection
+    title: Healthcare accessibility by county
+    description: Population-weighted index and mean distance to hospital per county.
+    keywords: [health, accessibility, Romania]
+    links:
+      - type: text/html
+        rel: canonical
+        title: Methodology and lineage
+        href: https://github.com/geo-andrei/romania-health-access-index#method
+    extents:
+      spatial:
+        bbox: [20.26, 43.61, 29.76, 48.27]
+        crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+    providers:
+      - type: feature
+        name: PostgreSQL
+        data:
+          host: db
+          port: 5432
+          dbname: ${POSTGRES_DB}
+          user: ${POSTGRES_USER}
+          password: ${POSTGRES_PASSWORD}
+          search_path: [public]
+        id_field: county
+        table: county_summary
+        crs: 
+          - http://www.opengis.net/def/crs/OGC/1.3/CRS84
+          - http://www.opengis.net/def/crs/EPSG/0/4326
+          - http://www.opengis.net/def/crs/EPSG/0/3844
+        storage_crs: http://www.opengis.net/def/crs/OGC/1.3/CRS84
+        geom_field: geom

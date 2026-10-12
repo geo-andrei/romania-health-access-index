@@ -1,0 +1,31 @@
+# Local stack: PostGIS for the spatial SQL, pygeoapi serving OGC API - Features from it.
+#   docker compose up -d db        -> then run the pipeline
+#   docker compose up -d api       -> http://localhost:5000
+services:
+  db:
+    image: postgis/postgis:16-3.4
+    env_file: .env
+    ports:
+      - "5433:5432"   # 5433 on the host avoids clashing with a locally installed PostgreSQL
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      retries: 10
+
+  api:
+    image: geopython/pygeoapi:0.19.0
+    env_file: .env
+    environment:
+      PYGEOAPI_SERVER_URL: http://localhost:5000
+    ports:
+      - "5000:80"
+    volumes:
+      - ./config/pygeoapi.local.yml:/pygeoapi/local.config.yml:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

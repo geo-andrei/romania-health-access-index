@@ -1,0 +1,40 @@
+# Dataset metadata (ISO 19115 core elements, kept human-readable). Update dates after each real run.
+title: Healthcare Accessibility Index - Romania (UAT level)
+abstract: >-
+  Composite 0-100 index of geographic access to health services for each Romanian
+  administrative-territorial unit (UAT), combining straight-line distance to the nearest
+  hospital and primary-care facility, pharmacies per 10,000 residents, and the share of
+  the unit's area within 10 km of a hospital.
+topic_category: health
+keywords: [healthcare, accessibility, proximity, Romania, OpenStreetMap, OGC API]
+spatial:
+  extent_wgs84: [20.26, 43.61, 29.76, 48.27]
+  analysis_crs: EPSG:3844
+  distribution_crs: EPSG:4326
+  representation: vector (MultiPolygon), one feature per UAT
+temporal:
+  reference_date: 2026-10-08   # OSM extract date = date of `hai download`
+  population_reference: 2020 (WorldPop)
+lineage: see metadata/lineage.md and metadata/lineage.jsonl
+sources:
+  - name: geoBoundaries gbOpen ROU ADM1/ADM2
+    url: https://www.geoboundaries.org
+    licence: CC BY 4.0
+  - name: OpenStreetMap health facilities (Overpass API)
+    url: https://www.openstreetmap.org
+    licence: ODbL 1.0
+  - name: WorldPop 2020 100 m population counts
+    url: https://www.worldpop.org
+    licence: CC BY 4.0
+licence: ODbL 1.0 (derivative of OpenStreetMap data)
+quality:
+  - Geometries validated and repaired with shapely.make_valid; counts in lineage.jsonl (prepare.boundaries.qc)
+  - OSM completeness varies; rural primary care is likely under-mapped
+  - Distances are Euclidean, not travel time
+distribution:
+  ogc_api_features: https://hai-api.redwave-6df40bfc.polandcentral.azurecontainerapps.io
+  downloads: [data/processed/access_index.geojson, data/processed/county_summary.geojson]
+contact:
+  name: Andrei Ancuta
+  email: andreiancuta08@gmail.com
+  role: author
