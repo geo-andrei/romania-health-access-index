@@ -17,6 +17,8 @@ def _git_rev() -> str:
 
 
 def _rel(p) -> str:
+    if "://" in str(p):
+        return str(p)  # Path() would collapse the // of a URL
     try:
         return Path(p).resolve().relative_to(ROOT).as_posix()
     except (ValueError, OSError):

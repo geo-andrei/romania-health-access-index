@@ -4,6 +4,7 @@ import pytest
 from shapely.geometry import Point, Polygon
 
 from hai.analyse import composite_index, coverage_share, minmax, nearest_km
+from hai.lineage import _rel
 from hai.prepare import classify, dedupe, fix_geometries, osm_to_points
 
 CRS = "EPSG:3844"
@@ -81,3 +82,7 @@ def test_composite_index_bounds_and_direction():
 
 def test_minmax_constant_series():
     assert (minmax(pd.Series([2.0, 2.0])) == 0.5).all()
+
+
+def test_lineage_keeps_urls_intact():
+    assert _rel("https://www.geoboundaries.org/api/x") == "https://www.geoboundaries.org/api/x"
